@@ -6,6 +6,11 @@ pipeline{
                 echo "====++++Build something++++===="
             }
         }
+        stage("test"){
+            steps{
+                echo "Test something"
+            }
+        }
     }
     post{
         always{

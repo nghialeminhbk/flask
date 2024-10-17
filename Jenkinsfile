@@ -1,26 +1,26 @@
 pipeline{
-    agent any
     stages{
-        stage("build"){
+        stage("Docker build"){
             steps{
-                echo "====++++Build something++++===="
+                sh "docker build -t leminhnghiaitbk/flask-app ."
             }
         }
-        stage("test"){
-            steps{
-                echo "Test something"
+
+        stage("Docker push image") {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                    sh 'docker push ${env.dockerHubUser}flask-app:latest'
+                }
             }
         }
     }
     post{
-        always{
-            echo "========always========"
-        }
         success{
-            echo "========pipeline executed successfully ========"
+            echo "successfully"
         }
         failure{
-            echo "========pipeline execution failed========"
+            echo "failed"
         }
     }
 }
